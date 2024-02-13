@@ -1,4 +1,5 @@
 <?php
+$debug=false;
 
 if(isset($_GET["num"]))$num = $_GET["num"];
 
@@ -13,25 +14,32 @@ echo "<div></div>";
 
 if(isset($_GET["num"])){
 	$num = $_GET["num"];
-	//echo "num = $num";
 	
+	// Total of all digits, including letters
 	$total=0;
 	for($i=0; $i<strlen($num); $i++){
 		$ch = substr($num, $i,1);
 		
 		switch($ch){
-			case is_numeric($ch): $total+= $ch;
+			case is_numeric($ch) && $ch!=0: $total+= $ch;
 			break;
 			case (ord($ch)>=ord("A") && ord($ch)<=ord("z")):
-				$total+= ord(strtoupper($ch))-64;
+				$chVal = ord(strtoupper($ch))-64;
+				$total+= $chVal;
+				
+				if($debug) echo "$ch - $chVal <br>";
 			break;
 		}
-		
-		
 	}
 	
-	echo "<div>Number for $num:</div>";
-	echo "<div>$total</div>";
+	// Get final numerology digit
+	$finalNum=0;		//TODO: recursively reprocess digits until there's only one left, for long numbers
+	for($i=0; $i<strlen($total); $i++){
+		$finalNum += substr($total, $i, 1);
+	}
+	
+	echo "<div>Number for $num: $total</div>";
+	echo "<div>Final numerology digit: $finalNum</div>";
 	
 	
 }
